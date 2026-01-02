@@ -1,4 +1,4 @@
-# Course Information
+# Full Stack Open Part 1-1 Course Information
 
 Simple model web application to understand React Basic Concepts
 
@@ -12,4 +12,5 @@ npm install
 # Run the Application
 npm run dev
 ```
+
 Then you can access the app at: http://localhost:5173/
