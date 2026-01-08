@@ -26,14 +26,15 @@ import personsService from './services/persons'
   )
  }
 
-  const Persons = ({showPersons}) => {
+  const Persons = ({showPersons, deletePerson}) => {
     return (
       <div>
         {showPersons.map(person => 
-        <p key={person.id}>
+        <div key={person.id}>
           {person.name + ' '}
-          {person.number}
-        </p>)} 
+          {person.number + ' '}
+        <button onClick={() => deletePerson(person)}>delete</button> 
+        </div>)}
       </div>
     )
   }
@@ -46,35 +47,70 @@ const App = () => {
 
   useEffect(() => {
     personsService
-      .getAll()
-      .then(initialPersons => {
-        setPersons(initialPersons)
-      })
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
 
   }, [])
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    const cleanedNewName = newName.trim();
+    const cleanedNewNumber = newNumber.trim();
     // Checks if new person is in same name at persons list
-    const isNameExists = persons.some(person => person.name === newName.trim());
+    const isNameExists = persons.some(person => person.name === cleanedNewName);
 
     if (!isNameExists) {
       const newPerson = {
-          name: newName.trim(),
-          number: newNumber.trim()
+          name: cleanedNewName,
+          number: cleanedNewNumber
         }
 
-      personsService
+      return personsService
         .create(newPerson)
         .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson));
+          setPersons(prev => prev.concat(returnedPerson));
+          setNewName('');
+          setNewNumber('');
         })
     }
-    else {
-      alert(`${newName} is already added to phonebook`)
+    
+    const isConfirmed = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+
+    if(isConfirmed) {
+      const updatedPerson = {
+        ...persons.find(person => person.name === cleanedNewName), 
+        number: cleanedNewNumber
+      }
+ 
+      return personsService
+        .update(updatedPerson)
+        .then(returnedPerson => {
+          setPersons(prev => prev.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch(() => {
+          alert('This person could be already deleted from server')
+        })
     }
-    setNewName('');
-    setNewNumber('');
+      
+  }
+
+  const handleDeleteClick = (clickedPerson) => {
+    const confirmDelete = window.confirm(`Delete ${clickedPerson.name} ?`);
+    
+    if(confirmDelete){
+      return personsService
+        .deletePerson(clickedPerson.id)
+        .then(() => {
+          setPersons(prev => prev.filter(person => person.id !== clickedPerson.id))
+        })
+        .catch(() => {
+          alert('This person could be already deleted from server')
+        })
+    }
   }
 
   const handleNameInput = (event) => {
@@ -103,7 +139,7 @@ const App = () => {
         newNumber={newNumber} handleNumberInput={handleNumberInput}
       />
       <h3>Numbers</h3>
-      <Persons showPersons={showPersons}/>
+      <Persons deletePerson={handleDeleteClick} showPersons={showPersons}/>
     </div>
   )
 }
