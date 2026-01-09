@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import personsService from './services/persons'
+import Notification from './components/Notification'
 
  const Filtered = ({handleFilterInput, filter}) => {
   return (
@@ -44,6 +45,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [notification, setNotification] = useState(null);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     personsService
@@ -71,6 +74,8 @@ const App = () => {
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(prev => prev.concat(returnedPerson));
+          setNotification({message: `${cleanedNewName} added successfully ✅`, type: 'create'});
+          handleNotificationMessage();
           setNewName('');
           setNewNumber('');
         })
@@ -88,6 +93,8 @@ const App = () => {
         .update(updatedPerson)
         .then(returnedPerson => {
           setPersons(prev => prev.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+          setNotification({message: `${cleanedNewName} updated successfully ✅`, type: 'update'});
+          handleNotificationMessage();
           setNewName('');
           setNewNumber('');
         })
@@ -107,8 +114,12 @@ const App = () => {
         .then(() => {
           setPersons(prev => prev.filter(person => person.id !== clickedPerson.id))
         })
-        .catch(() => {
-          alert('This person could be already deleted from server')
+        .catch((error) => {
+          setNotification({message: `Information of ${clickedPerson.name} has already been removed from server!`, type: 'error'})
+          handleNotificationMessage();
+          if(error.status === 404) {
+            setPersons(prev => prev.filter(person => person.id !== clickedPerson.id))
+          } 
         })
     }
   }
@@ -121,7 +132,14 @@ const App = () => {
   }
   const handleFilterInput = (event) => {
     setFilter(event.target.value)
-
+  }
+  const handleNotificationMessage = () => {
+    if(timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
   }
   //This is filtering persons data and displays them
   const cleanFilterInput = filter.trim().toLowerCase();
@@ -131,6 +149,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification}/>
       <Filtered filter={filter} handleFilterInput={handleFilterInput}/>
       <h3>add a new</h3>
       <PersonsForm 
