@@ -1,4 +1,4 @@
-const CountryResults = ({ filterCountries }) => {
+const CountryResults = ({ filterCountries, showCountryClick }) => {
 
   if(filterCountries.length >= 10) {
     return (
@@ -24,7 +24,12 @@ const CountryResults = ({ filterCountries }) => {
   return (
     <div>
       {filterCountries.map(country => {
-      return <div key={country.name.common}>{country.name.common}</div>
+      return (
+        <div key={country.cca3}>
+          <div>{country.name.common}</div>
+          <button onClick={() => showCountryClick(country)}>Show</button>
+        </div>
+      )
       })}
     </div>
   )    

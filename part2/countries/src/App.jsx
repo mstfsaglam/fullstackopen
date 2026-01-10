@@ -22,13 +22,16 @@ const App = () => {
     inputValue ? setFilterCountries(filteredList) : setFilterCountries([])
     setCountryName(inputValue)
   }
-  
+  const showCountryClick = (country) => {
+    setFilterCountries(Array(country))
+  }
+
   return(
     <div>
       <div>
         find countries <input value={countryName} onChange={handleInputValue} />
       </div>
-      <CountryResults filterCountries={filterCountries}/>
+      <CountryResults filterCountries={filterCountries} showCountryClick={showCountryClick}/>
     </div>
   )
 }
