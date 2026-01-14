@@ -1,4 +1,24 @@
 ### Get all Persons
 GET http://localhost:3001/api/persons
 
-###
+
+### Get single person
+GET http://localhost:3001/api/persons/2
+
+
+### Create person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Alan Turing",
+  "number": "11-111-111-111"
+}
+
+
+### Delete single person
+DELETE http://localhost:3001/api/persons/1
+
+
+
+

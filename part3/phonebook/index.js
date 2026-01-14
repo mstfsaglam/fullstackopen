@@ -4,7 +4,7 @@ const PORT = 3001;
 
 app.use(express.json());
 
-const persons = [
+let persons = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -29,6 +29,51 @@ const persons = [
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
+});
+
+app.get("/info", (request, response) => {
+  const createdAt = new Date().toString();
+  response.send(`
+    <div>Phonebook has info for ${persons.length} people</div>
+    <p>${createdAt}</p>
+  `);
+});
+
+app.get("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const person = persons.find((person) => person.id === id);
+  person ? response.json(person) : response.status(404).end();
+});
+
+const generateId = () => {
+  return String(Math.floor(Math.random() * 1e9))
+}
+
+const checkSameName = (bodyName) => {
+  return persons.find(person => person.name === bodyName) ? true : false
+}
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if(!body.name || !body.number || checkSameName(body.name)){
+    return response.status(400).json( { error: "name must be uniq!" } );
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
+  };
+
+  persons = persons.concat(person);
+  response.json(person);
+})
+
+app.delete("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  persons = persons.filter((person) => person.id !== id);
+  response.status(204).end();
 });
 
 app.listen(PORT, () => {
