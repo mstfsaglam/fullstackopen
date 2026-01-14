@@ -1,8 +1,17 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+
+morgan.token('newPerson', (request, response) => {
+  if(request.method === 'POST') {
+    return JSON.stringify(request.body);
+  }
+})
+
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :newPerson"));
 
 let persons = [
   {
@@ -46,35 +55,41 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 const generateId = () => {
-  return String(Math.floor(Math.random() * 1e9))
-}
+  return String(Math.floor(Math.random() * 1e9));
+};
 
 const checkSameName = (bodyName) => {
-  return persons.find(person => person.name === bodyName) ? true : false
-}
+  return persons.some((person) => person.name === bodyName);
+};
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if(!body.name || !body.number || checkSameName(body.name)){
-    return response.status(400).json( { error: "name must be uniq!" } );
+  if (!body.name || !body.number || checkSameName(body.name)) {
+    return response.status(400).json({ error: "name must be uniq!" });
   }
 
   const person = {
     id: generateId(),
     name: body.name,
-    number: body.number
+    number: body.number,
   };
 
   persons = persons.concat(person);
   response.json(person);
-})
+});
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   persons = persons.filter((person) => person.id !== id);
   response.status(204).end();
 });
+
+const unknownEndpoint = (request, response) => {
+  return response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
 
 app.listen(PORT, () => {
   console.log(`phonebook app listening on port ${PORT}`);
