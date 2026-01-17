@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
-const PORT = 3001;
 
+app.use(express.static('dist'));
 app.use(express.json());
 
 morgan.token('newPerson', (request, response) => {
@@ -91,6 +91,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`phonebook app listening on port ${PORT}`);
 });
