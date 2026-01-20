@@ -9,12 +9,12 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "rest vscode",
+  "name": "test",
   "number": "333-333-333-333"
 }
 
 ### Delete single person
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/696f6c2d143c32e6bee0425c
 
 
 
