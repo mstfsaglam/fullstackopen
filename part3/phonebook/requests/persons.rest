@@ -2,15 +2,15 @@
 GET http://localhost:3001/api/persons
 
 ### Get single person
-GET http://localhost:3001/api/persons/2
+GET http://localhost:3001/api/persons/696e99df2b43c62290e85fc8
 
 ### Create person
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "Alan Turing",
-  "number": "11-111-111-111"
+  "name": "rest vscode",
+  "number": "333-333-333-333"
 }
 
 ### Delete single person
