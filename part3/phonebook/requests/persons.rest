@@ -9,8 +9,8 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "test",
-  "number": "333-333-333-333"
+  "name": "test regex",
+  "number": "333-3333"
 }
 
 ### Delete single person

@@ -68,7 +68,7 @@ const App = () => {
       const newPerson = {
           name: cleanedNewName,
           number: cleanedNewNumber
-        }
+      }
 
       return personsService
         .create(newPerson)
@@ -78,6 +78,11 @@ const App = () => {
           handleNotificationMessage();
           setNewName('');
           setNewNumber('');
+        })
+        .catch(error => {
+          console.log(error.response.data.error);
+          setNotification({ message: error.response.data.error, type: 'error'});
+          handleNotificationMessage();
         })
     }
     
