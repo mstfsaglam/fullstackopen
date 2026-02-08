@@ -11,10 +11,10 @@ logger.info('connection to ', MONGODB_URI)
 
 mongoose.connect(MONGODB_URI, { family: 4 })
   .then(() => {
-    logger.info("Connected to database")
+    logger.info('Connected to database')
   })
   .catch(error => {
-    logger.info("Error connection to database", error.message)
+    logger.info('Error connection to database', error.message)
   })
 
 app.use(express.json())

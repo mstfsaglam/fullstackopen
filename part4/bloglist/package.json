@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "node --test",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Mustafa Sağlam",
@@ -17,5 +18,11 @@
     "express": "^5.2.1",
     "lodash": "^4.17.23",
     "mongoose": "^9.1.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.7.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0"
   }
 }

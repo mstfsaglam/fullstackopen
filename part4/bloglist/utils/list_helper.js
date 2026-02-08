@@ -10,9 +10,9 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = (blogs) => {
   const favBlog = blogs.reduce((fav, blog) => fav.likes < blog.likes
-    ? fav = blog 
+    ? fav = blog
     : fav
-    , blogs[0]
+  , blogs[0]
   )
 
   return favBlog
@@ -44,7 +44,7 @@ const mostLikes = (blogs) => {
   return mostLikesAuthor
 }
 
-module.exports = { 
+module.exports = {
   totalLikes,
   dummy,
   favoriteBlog,
