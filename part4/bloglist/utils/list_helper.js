@@ -1,22 +1,53 @@
+const _ = require('lodash')
+
 const dummy = (blogs) => {
   return 1
 }
 
 const totalLikes = (blogs) => {
-  const likes = blogs.map(blog => blog.likes).reduce((acc, blog) => acc + blog, 0)
-  console.log(likes)
-  return likes;
+  return blogs.reduce((acc, blog) => acc + blog.likes, 0)
 }
 
 const favoriteBlog = (blogs) => {
-  let favBlog = blogs[0]
-
-  blogs.map(blog => favBlog.likes < blog.likes
-    ? favBlog = blog
-    : favBlog
+  const favBlog = blogs.reduce((fav, blog) => fav.likes < blog.likes
+    ? fav = blog 
+    : fav
+    , blogs[0]
   )
-  console.log(favBlog)
+
   return favBlog
 }
 
-module.exports = { totalLikes, dummy, favoriteBlog }
+const mostBlogs = (blogs) => {
+  const blogsByAuthor = _.groupBy(blogs, 'author')
+  const blogsPerAuthor = Object.entries(blogsByAuthor).map(
+    ([author, blogs]) => ({
+      author,
+      blogs: blogs.length
+    })
+  )
+  const mostAuthor = _.maxBy(blogsPerAuthor, 'blogs')
+
+  return mostAuthor
+}
+
+const mostLikes = (blogs) => {
+  const blogsByAuthor = _.groupBy(blogs, 'author')
+  const totalByAuthor = Object.entries(blogsByAuthor).map(
+    ([author, blogs]) => ({
+      author,
+      likes: _.sumBy(blogs, 'likes')
+    })
+  )
+  const mostLikesAuthor = _.maxBy(totalByAuthor, 'likes')
+
+  return mostLikesAuthor
+}
+
+module.exports = { 
+  totalLikes,
+  dummy,
+  favoriteBlog,
+  mostBlogs,
+  mostLikes
+}

@@ -11,7 +11,7 @@ test('dummy returns one', () => {
 
 describe('blogs test for each property', () => {
   const listWithOneBlog = [
-     {
+    {
     _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
     author: "Michael Chan",
@@ -75,6 +75,22 @@ describe('blogs test for each property', () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0
+    })
+  })
+
+  test('Most blogs in Authors', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    assert.deepStrictEqual(result, {
+      author: "Robert C. Martin",
+      blogs: 3
+    })
+  })
+
+  test('Most likes in Authors', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 17
     })
   })
 })
