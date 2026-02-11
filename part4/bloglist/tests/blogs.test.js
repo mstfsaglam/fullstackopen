@@ -1,6 +1,12 @@
-const { test, describe } = require('node:test')
+const { test, describe, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
+const mongoose = require('mongoose')
 const listHelper = require('../utils/list_helper')
+const supertest = require('supertest')
+const app = require('../app')
+const Blog = require('../models/blog')
+
+const api = supertest(app)
 
 test('dummy returns one', () => {
   const blogs = []
@@ -61,6 +67,11 @@ describe('blogs test for each property', () => {
     }
   ]
 
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(listWithOneBlog)
+  })
+
   test('total likes on blogs', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     assert.strictEqual(result, 36)
@@ -92,5 +103,19 @@ describe('blogs test for each property', () => {
       author: 'Edsger W. Dijkstra',
       likes: 17
     })
+  })
+
+  test('get all blogs from database', async () => {
+    let blogs = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    console.log(blogs.body)
+    assert.strictEqual(blogs.body.length, 6)
+  })
+
+  after(async () => {
+    await mongoose.connection.close()
   })
 })
