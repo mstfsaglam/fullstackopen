@@ -105,7 +105,7 @@ describe('blogs test for each property', () => {
     })
   })
 
-  test('get all blogs from database', async () => {
+  test('Get all blogs from database', async () => {
     let blogs = await api
       .get('/api/blogs')
       .expect(200)
@@ -113,6 +113,17 @@ describe('blogs test for each property', () => {
 
     console.log(blogs.body)
     assert.strictEqual(blogs.body.length, 6)
+  })
+
+  test('Unique identifier property name', async () => {
+    const blogs = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    blogs.body.forEach((blog, index) => {
+      assert.ok(blog.id, `blog at index ${index} is missing id`)
+    })
   })
 
   after(async () => {
