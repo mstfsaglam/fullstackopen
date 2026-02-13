@@ -111,7 +111,6 @@ describe('blogs test for each property', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    console.log(blogs.body)
     assert.strictEqual(blogs.body.length, 6)
   })
 
@@ -124,6 +123,43 @@ describe('blogs test for each property', () => {
     blogs.body.forEach((blog, index) => {
       assert.ok(blog.id, `blog at index ${index} is missing id`)
     })
+  })
+  test('test for creating new blog', async () => {
+    const newBlog = {
+      title: 'testing create blog',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 22,
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await Blog.find({})
+    assert.strictEqual(response.length, listWithOneBlog.length + 1)
+
+    const titles = response.map(blog => blog.title)
+    assert.ok(titles.includes('testing create blog'), true)
+  })
+
+  test('are likes exist in blog', async () => {
+    const newBlog = {
+      title: 'are likes exist',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await Blog.find({})
+    const createdBlog = response.find(blog => blog.title === 'are likes exist')
+    assert.strictEqual(createdBlog.likes, 0)
   })
 
   after(async () => {
