@@ -162,6 +162,22 @@ describe('blogs test for each property', () => {
     assert.strictEqual(createdBlog.likes, 0)
   })
 
+  test('are title and URL exist in blog', async () => {
+    const newBlog = {
+      author: 'Edsger W. Dijkstra',
+      likes: 10,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const blogs = await Blog.find({})
+    assert.strictEqual(blogs.length, listWithOneBlog.length)
+  })
+
   after(async () => {
     await mongoose.connection.close()
   })
