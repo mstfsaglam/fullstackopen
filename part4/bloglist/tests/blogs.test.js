@@ -14,7 +14,7 @@ describe('When there is initially blogs saved', () => {
     await Blog.insertMany(listHelper.blogList)
   })
 
-  describe('After some properties change', () => {
+  describe('blog list helper functions', () => {
     test('total likes on blogs', () => {
       const result = listHelper.totalLikes(listHelper.blogList)
       assert.strictEqual(result, 36)
@@ -56,7 +56,7 @@ describe('When there is initially blogs saved', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-      assert.strictEqual(blogs.body.length, 6)
+      assert.strictEqual(blogs.body.length, listHelper.blogList.length)
     })
 
     test('Unique identifier property name', async () => {
@@ -85,11 +85,11 @@ describe('When there is initially blogs saved', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-      const response = await Blog.find({})
+      const response = await listHelper.blogInDb()
       assert.strictEqual(response.length, listHelper.blogList.length + 1)
 
       const titles = response.map(blog => blog.title)
-      assert.ok(titles.includes('testing create blog'), true)
+      assert(titles.includes('testing create blog'))
     })
 
     test('are likes exist in blog', async () => {
@@ -105,7 +105,7 @@ describe('When there is initially blogs saved', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
-      const response = await Blog.find({})
+      const response = await listHelper.blogInDb()
       const createdBlog = response.find(blog => blog.title === 'are likes exist')
       assert.strictEqual(createdBlog.likes, 0)
     })
@@ -122,8 +122,35 @@ describe('When there is initially blogs saved', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
-      const blogs = await Blog.find({})
+      const blogs = await listHelper.blogInDb()
       assert.strictEqual(blogs.length, listHelper.blogList.length)
+    })
+  })
+
+  describe('update a blog', () => {
+    test('update blogs likes', async () => {
+      const blogs = await listHelper.blogInDb()
+      const id = blogs[0].id
+      await api
+        .put(`/api/blogs/${id}`)
+        .send({ likes: 50 })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+      const response = await listHelper.blogInDb()
+      const update = response.find(blog => blog.id === id)
+      assert.strictEqual(update.likes, 50)
+    })
+  })
+
+  describe('delete a blog', () => {
+    test('delete a blog by id', async() => {
+      const blogs = await listHelper.blogInDb()
+      const id = blogs[0].id
+      await api
+        .delete(`/api/blogs/${id}`)
+        .expect(204)
+      const response = await listHelper.blogInDb()
+      assert.strictEqual(response.length, listHelper.blogList.length - 1)
     })
   })
 
