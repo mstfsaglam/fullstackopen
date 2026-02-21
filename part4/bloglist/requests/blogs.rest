@@ -9,11 +9,12 @@ Content-Type: application/json
   "title": "seventh",
   "author": "mustafa",
   "url": "example-blog.com",
-  "likes": 5
+  "likes": 5,
+  "user": "699a0d61b23ba89ed557379f"
 }
 
 ### Delete blog
-DELETE http://localhost:3003/api/blogs/6992fd6cb138c70af739f42c
+DELETE http://localhost:3003/api/blogs/6992fd67b138c70af739f42a
 
 ### Update blog
 PUT http://localhost:3003/api/blogs/69871141ab3154cfb07a9c6f
