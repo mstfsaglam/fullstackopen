@@ -3,8 +3,10 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const listHelper = require('../utils/list_helper')
 const supertest = require('supertest')
+const bcrypt = require('bcryptjs')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -153,8 +155,62 @@ describe('When there is initially blogs saved', () => {
       assert.strictEqual(response.length, listHelper.blogList.length - 1)
     })
   })
+})
 
-  after(async () => {
-    await mongoose.connection.close()
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('secret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
   })
+
+  test('Creation succeeds with a new username', async () => {
+    const usersAtStart = await listHelper.usersInDb()
+
+    const newUser = {
+      username: 'mstf',
+      name: 'Mustafa',
+      password: 'fullStack26'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await listHelper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(user => user.username)
+    assert(usernames.includes(newUser.username))
+  })
+
+  test('Creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await listHelper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'fullStack26'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await listHelper.usersInDb()
+    assert(result.body.error.includes('expected `username` to be unique'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+})
+
+after(async () => {
+  await mongoose.connection.close()
 })
