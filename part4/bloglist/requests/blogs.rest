@@ -4,13 +4,13 @@ GET http://localhost:3003/api/blogs
 ### Create new blog
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5OWEwZDYxYjIzYmE4OWVkNTU3Mzc5ZiIsImlhdCI6MTc3MTg3Mzk3MX0.BKfW1Kd87EKaQ6WcS5rF315EjZyfPRmNLwX48gi5D6E
 
 {
-  "title": "seventh",
+  "title": "Eighth",
   "author": "mustafa",
   "url": "example-blog.com",
-  "likes": 5,
-  "user": "699a0d61b23ba89ed557379f"
+  "likes": 10
 }
 
 ### Delete blog
