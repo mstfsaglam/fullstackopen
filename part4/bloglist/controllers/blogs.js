@@ -41,13 +41,22 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   response.status(204).end()
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', userExtractor, async (request, response) => {
   const blog = await Blog.findById(request.params.id)
-  if (blog) {
-    blog.likes = request.body.likes
-    const updatedBlog = await blog.save()
-    response.status(200).json(updatedBlog)
+  const user = request.user
+
+  if (!blog) {
+    return response.status(404).json({ error: 'blog not found' })
   }
+
+  if (blog.user.toString() !== user._id.toString()) {
+    return response.status(403).json({ error: 'forbidden' })
+  }
+
+  blog.likes = request.body.likes
+
+  const updatedBlog = await blog.save()
+  response.status(200).json(updatedBlog)
 })
 
 module.exports = blogsRouter

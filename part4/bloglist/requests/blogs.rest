@@ -19,13 +19,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1zdGYiLCJpZCI6IjY5OWM0MDhkOWRmNjNhOWNmYmVhYTVlMyIsImlhdCI6MTc3MjA2MTYyNn0.Ynj6awJ0AJ1vsYTHy88CFh1YwLeTscDotR9anjT99BI
 
 ### Update blog
-PUT http://localhost:3003/api/blogs/69871141ab3154cfb07a9c6f
+PUT http://localhost:3003/api/blogs/699ca76548745a9f46f828cb
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1zdGYiLCJpZCI6IjY5OWM0MDhkOWRmNjNhOWNmYmVhYTVlMyIsImlhdCI6MTc3MjE0MDkxOSwiZXhwIjoxNzcyMTQ0NTE5fQ.fTvkLgkWN_o9YgsbLJ5S_0Eq9iyXLdWzc2ajFcZQPVE
 
 {
-    "title": "sixth",
-    "author": "mustafa",
-    "url": "example-blog.com",
-    "likes": 40,
-    "id": "69871141ab3154cfb07a9c6f"
+  "likes": 15
 }
