@@ -5,8 +5,6 @@ This project is part of the Full Stack Open course.
 It implements a RESTful Blog API built with Node.js, Express and MongoDB.  
 The application includes JWT-based authentication, authorization checks and a comprehensive test suite.
 
----
-
 ## 🚀 Features
 
 - Create, read, update and delete blogs
@@ -15,8 +13,6 @@ The application includes JWT-based authentication, authorization checks and a co
 - Proper HTTP status handling (200, 201, 204, 400, 401, 403, 404)
 - Password hashing with bcrypt
 - Fully tested with Node test runner and Supertest
-
----
 
 ## 🧪 Testing
 
@@ -31,8 +27,6 @@ You can run test using:
 npm run test
 ```
 
----
-
 ## 🛠️ Technologies Used
 
 - Node.js
@@ -42,8 +36,6 @@ npm run test
 - bcrypt
 - Supertest
 
----
-
 ## 📂 Project Structure
 
 controllers/
@@ -52,16 +44,12 @@ middleware/
 tests/
 utils/
 
----
-
-## What This Project Demonstrates
+## 📌 What This Project Demonstrates
 
 - Secure backend API design
 - Middleware-based authentication
 - Integration testing
 - Clean project structuring
-
----
 
 ## Install and Run
 
