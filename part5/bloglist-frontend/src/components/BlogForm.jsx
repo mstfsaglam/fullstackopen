@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const CreateBlog = ({ handleCreateBlog }) => {
+const BlogForm = ({ handleBlogForm }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -8,7 +8,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
   const submit = event => {
     event.preventDefault()
 
-    handleCreateBlog({ title, author, url })
+    handleBlogForm({ title, author, url })
 
     setTitle('')
     setAuthor('')
@@ -54,4 +54,4 @@ const CreateBlog = ({ handleCreateBlog }) => {
   )
 }
 
-export default CreateBlog
+export default BlogForm
