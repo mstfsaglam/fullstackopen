@@ -5,12 +5,14 @@ import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const timeoutRef = useRef(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs( blogs ))  
@@ -46,6 +48,7 @@ const App = () => {
   const handleBlogForm = async newBlog => {
     try {
       const response = await blogService.create(newBlog)
+      blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(response))
       showNotification(`a new blog ${response.title} by ${response.author} added`)
     } catch {
@@ -84,8 +87,10 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <h2>create new</h2>
-      <BlogForm handleBlogForm={handleBlogForm}/>
+      <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
+        <h2>create new</h2>
+        <BlogForm handleBlogForm={handleBlogForm}/>
+      </Togglable>
       
       <BlogList blogs={blogs}/>
     </div>
