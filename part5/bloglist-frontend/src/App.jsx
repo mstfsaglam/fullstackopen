@@ -56,6 +56,20 @@ const App = () => {
     }
   }
 
+  const handleLikes = async blog => {
+    try {
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + 1 
+      }
+      console.log(updatedBlog)
+      const response = await blogService.update(updatedBlog)
+      setBlogs(blogs.map(b => b.id === response.id ? response : b))
+    } catch {
+        console.log('update likes failed')
+    }
+  }
+
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type })
 
@@ -92,7 +106,7 @@ const App = () => {
         <BlogForm handleBlogForm={handleBlogForm}/>
       </Togglable>
       
-      <BlogList blogs={blogs}/>
+      <BlogList blogs={blogs} handleLikes={handleLikes}/>
     </div>
   )
 }
