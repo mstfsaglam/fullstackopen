@@ -62,11 +62,23 @@ const App = () => {
         ...blog,
         likes: blog.likes + 1 
       }
-      console.log(updatedBlog)
+
       const response = await blogService.update(updatedBlog)
-      setBlogs(blogs.map(b => b.id === response.id ? response : b))
+      setBlogs(prev => prev.map(b => b.id === response.id ? response : b))
     } catch {
-        console.log('update likes failed')
+        showNotification('update likes failed', 'error')
+    }
+  }
+
+  const handleDelete = async blog => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.deleteBlog(blog.id)
+        setBlogs(prev => prev.filter(b => b.id !== blog.id))
+        showNotification(`${blog.title} by ${blog.author} deleted successfully`, 'success')
+      } catch {
+        showNotification('delete blog failed', 'error')
+      }
     }
   }
 
@@ -106,7 +118,12 @@ const App = () => {
         <BlogForm handleBlogForm={handleBlogForm}/>
       </Togglable>
       
-      <BlogList blogs={blogs} handleLikes={handleLikes}/>
+      <BlogList
+        blogs={blogs}
+        handleLikes={handleLikes}
+        handleDelete={handleDelete}
+        user={user}
+      />
     </div>
   )
 }
