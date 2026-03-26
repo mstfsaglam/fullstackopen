@@ -15,7 +15,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs( blogs ))  
+    blogService.getAll().then(blogs => setBlogs( blogs ))
   }, [])
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const App = () => {
       const LoggedUser = JSON.parse(loggedUserJSON)
       blogService.setToken(LoggedUser.token)
       setUser(LoggedUser)
-    } 
+    }
   }, [])
 
   const handleLogin = async credentials => {
@@ -60,13 +60,13 @@ const App = () => {
     try {
       const updatedBlog = {
         ...blog,
-        likes: blog.likes + 1 
+        likes: blog.likes + 1
       }
 
       const response = await blogService.update(updatedBlog)
       setBlogs(prev => prev.map(b => b.id === response.id ? response : b))
     } catch {
-        showNotification('update likes failed', 'error')
+      showNotification('update likes failed', 'error')
     }
   }
 
@@ -117,7 +117,7 @@ const App = () => {
         <h2>create new</h2>
         <BlogForm handleBlogForm={handleBlogForm}/>
       </Togglable>
-      
+
       <BlogList
         blogs={blogs}
         handleLikes={handleLikes}
